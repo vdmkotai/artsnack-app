@@ -1,0 +1,25 @@
+.responsive {
+  container-type: inline-size;
+  align-items: flex-start;
+}
+
+/* Keep the original aspect ratio even when a landscape tile fills the panel. */
+.responsive > * {
+  --responsive-row: calc(var(--tile-h) * var(--preview-scale, 1));
+  width: min(100%, calc(var(--responsive-row) * var(--tile-aspect)));
+  height: auto;
+  aspect-ratio: var(--tile-aspect);
+}
+
+@media (min-width: 64rem) {
+  .responsive > * {
+    /* Scale the portrait width floor too, so zooming out actually shrinks it. */
+    min-width: min(calc(160px * var(--preview-scale, 1)), 100%);
+  }
+}
+
+@media (min-width: 48rem) {
+  .responsive > * {
+    --responsive-row: calc(clamp(160px, 30cqw, var(--tile-h-md)) * var(--preview-scale, 1));
+  }
+}

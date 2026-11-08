@@ -1,0 +1,36 @@
+[package]
+name = "artsnack"
+description = "ArtSnack for macOS: the application shell that composes the feature crates."
+edition.workspace = true
+version.workspace = true
+publish.workspace = true
+
+[[bin]]
+name = "artsnack"
+path = "src/main.rs"
+
+[lints]
+workspace = true
+
+[dependencies]
+anyhow.workspace = true
+artsnack-backend.workspace = true
+artsnack-generate.workspace = true
+artsnack-library.workspace = true
+artsnack-media.workspace = true
+artsnack-pods.workspace = true
+artsnack-prompts.workspace = true
+artsnack-rules.workspace = true
+artsnack-runtime.workspace = true
+artsnack-search.workspace = true
+artsnack-session.workspace = true
+artsnack-settings.workspace = true
+artsnack-settings-screen.workspace = true
+artsnack-ui.workspace = true
+futures.workspace = true
+gpui-kit.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+url.workspace = true

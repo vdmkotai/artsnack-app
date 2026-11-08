@@ -1,0 +1,14 @@
+[package]
+name = "artsnack-runtime"
+description = "The Tokio runtime that network clients (Convex, Clerk, the media CDN) run on, bridged into GPUI tasks."
+edition.workspace = true
+version.workspace = true
+publish.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+anyhow.workspace = true
+gpui-kit.workspace = true
+tokio.workspace = true

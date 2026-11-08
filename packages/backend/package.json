@@ -1,0 +1,19 @@
+{
+  "name": "@artsnack/backend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "convex dev",
+    "deploy": "convex deploy",
+    "codegen": "convex codegen"
+  },
+  "dependencies": {
+    "@artsnack/shared": "workspace:*",
+    "@aws-sdk/client-s3": "^3.1095.0",
+    "convex": "^1.42.3",
+    "ws": "^8.21.0"
+  },
+  "devDependencies": {
+    "@types/ws": "^8.18.1"
+  }
+}

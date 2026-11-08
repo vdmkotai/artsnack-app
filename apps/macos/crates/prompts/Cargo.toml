@@ -1,0 +1,18 @@
+[package]
+name = "artsnack-prompts"
+description = "The Prompts screen: the saved-prompt library and the Enhance recipes."
+edition.workspace = true
+version.workspace = true
+publish.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+artsnack-backend.workspace = true
+artsnack-rules.workspace = true
+artsnack-settings.workspace = true
+gpui-kit.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+tracing.workspace = true

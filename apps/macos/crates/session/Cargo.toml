@@ -1,0 +1,25 @@
+[package]
+name = "artsnack-session"
+description = "Sign-in through Clerk's Frontend API in native mode, the Keychain-held client, and the short-lived Convex token."
+edition.workspace = true
+version.workspace = true
+publish.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+anyhow.workspace = true
+artsnack-runtime.workspace = true
+base64.workspace = true
+futures.workspace = true
+gpui-kit.workspace = true
+parking_lot.workspace = true
+rand.workspace = true
+reqwest.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+tokio.workspace = true
+tracing.workspace = true
+url.workspace = true

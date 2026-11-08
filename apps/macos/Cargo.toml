@@ -1,0 +1,95 @@
+[workspace]
+resolver = "3"
+members = ["crates/*"]
+default-members = ["crates/app"]
+
+[workspace.package]
+edition = "2024"
+version = "0.1.0"
+rust-version = "1.99"
+publish = false
+
+[workspace.dependencies]
+# GPUI Kit pins the `gpui-pre` snapshot it is tested against. Upgrade it as one
+# unit and never pull a single GPUI crate forward on its own.
+gpui-kit = "=0.8.0"
+
+artsnack-api-tab = { path = "crates/api_tab" }
+artsnack-backend = { path = "crates/backend" }
+artsnack-generate = { path = "crates/generate" }
+artsnack-library = { path = "crates/library" }
+artsnack-media = { path = "crates/media" }
+artsnack-pods = { path = "crates/pods" }
+artsnack-prompts = { path = "crates/prompts" }
+artsnack-rules = { path = "crates/rules" }
+artsnack-runtime = { path = "crates/runtime" }
+artsnack-search = { path = "crates/search" }
+artsnack-session = { path = "crates/session" }
+artsnack-settings = { path = "crates/settings" }
+artsnack-settings-screen = { path = "crates/settings_screen" }
+artsnack-ui = { path = "crates/ui" }
+artsnack-video = { path = "crates/video" }
+artsnack-video-tab = { path = "crates/video_tab" }
+
+anyhow = "1"
+base64 = "0.22"
+# rustls rather than the default vendored OpenSSL, so Convex's WebSocket and
+# reqwest share one TLS stack.
+convex = { version = "0.10.4", default-features = false, features = ["rustls-tls-webpki-roots"] }
+dirs = "6"
+futures = "0.3"
+# Unicode normalisation and classes for the Search engine (already built for `url`).
+icu_normalizer = { version = "2.4", default-features = false, features = ["compiled_data"] }
+icu_properties = { version = "2.4", default-features = false, features = ["compiled_data"] }
+image = { version = "0.25", default-features = false, features = ["jpeg", "png", "webp", "gif"] }
+parking_lot = "0.12"
+rand = "0.9"
+reqwest = { version = "0.12", default-features = false, features = [
+  "rustls-tls",
+  "json",
+  "http2",
+  "stream",
+] }
+rusqlite = { version = "0.37", features = ["bundled"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
+smallvec = "1"
+thiserror = "2"
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "time", "sync", "fs", "io-util"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+url = "2"
+
+[workspace.lints.clippy]
+dbg_macro = "deny"
+todo = "deny"
+type_complexity = "allow"
+
+[profile.dev]
+debug = "limited"
+split-debuginfo = "unpacked"
+
+# GPUI is unusably slow unoptimised; these are the crates GPUI Kit itself
+# builds at -O3 in debug, plus the decoders our media pipeline leans on.
+[profile.dev.package]
+gpui-pre = { opt-level = 3 }
+gpui-pre-platform = { opt-level = 3 }
+gpui-pre-sum-tree = { opt-level = 3 }
+resvg = { opt-level = 3 }
+rustybuzz = { opt-level = 3 }
+taffy = { opt-level = 3 }
+ttf-parser = { opt-level = 3 }
+smol = { opt-level = 3 }
+# QuickJS runs the shared TypeScript; unoptimised it is several times slower.
+rquickjs-sys = { opt-level = 3 }
+rquickjs-core = { opt-level = 3 }
+image = { opt-level = 3 }
+zune-jpeg = { opt-level = 3 }
+image-webp = { opt-level = 3 }
+png = { opt-level = 3 }
+
+[profile.release]
+lto = "thin"
+debug = "line-tables-only"
+strip = "symbols"

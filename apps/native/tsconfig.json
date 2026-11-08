@@ -1,0 +1,29 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    /* Not because anything here runs on Node, but because `@/convex/_generated/api`
+     * pulls the Convex server modules into this program, and the `"use node"`
+     * actions among them reach for `Buffer` and `node:crypto`. The Convex
+     * tsconfig carries the same entry for the same reason. */
+    /* `expo-env.d.ts` is generated and gitignored, so a clean CI checkout does
+     * not get its `expo/types` reference. List it explicitly here; among other
+     * globals, Expo declares side-effect `*.css` imports such as global.css. */
+    "types": ["node", "expo/types"],
+    /* Mirrors the web app so a component can move between the two without its
+     * imports changing. `./lib/*` first: this app has its own convex client and
+     * platform helpers, and everything portable falls through to packages/shared. */
+    "paths": {
+      "@/lib/*": ["./lib/*", "../../packages/shared/*"],
+      "@/convex/*": ["../../packages/backend/convex/*"],
+      "@/*": ["./*"]
+    }
+  },
+  /* packages/shared is reached through imports rather than listed here: pulling
+   * the whole directory in would also compile its 16 node:test suites, which the
+   * root tsconfig already covers. */
+  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"],
+  "exclude": ["node_modules"]
+}

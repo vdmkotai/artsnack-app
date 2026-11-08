@@ -1,0 +1,22 @@
+[package]
+name = "artsnack-rules"
+description = "The web app's shared TypeScript (packages/shared) — model registry, form rules, pricing — run in an embedded QuickJS, so both clients follow one source."
+edition.workspace = true
+version.workspace = true
+publish.workspace = true
+build = "build.rs"
+
+[lints]
+workspace = true
+
+[dependencies]
+anyhow.workspace = true
+futures.workspace = true
+gpui-kit.workspace = true
+rquickjs = "0.14"
+serde.workspace = true
+serde_json.workspace = true
+tracing.workspace = true
+
+[build-dependencies]
+serde_json.workspace = true

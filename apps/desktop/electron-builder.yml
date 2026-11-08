@@ -1,0 +1,62 @@
+# Packaging for the macOS shell. `bun run --cwd apps/desktop dist` compiles
+# src/ with Bun and then runs electron-builder against this file.
+#
+# Signing picks up the "Developer ID Application" identity from the login
+# keychain when present and ad-hoc signs otherwise; both are enough to install
+# and run locally. Notarisation is off: it needs an App Store Connect key, and
+# a build made on this machine carries no quarantine flag, so Gatekeeper never
+# asks.
+#
+# The bundle id is a placeholder: set ARTSNACK_DESKTOP_APP_ID when packaging
+# (scripts/package.ts passes it as -c.appId) to use your own.
+appId: com.example.artsnack.desktop
+productName: ArtSnack
+copyright: Vadym Kotai
+directories:
+  output: release
+  buildResources: resources
+files:
+  - dist/**
+  - static/**
+  - package.json
+asar: true
+# artsnack://sign-in?ticket=… is how the browser hands a finished sign-in
+# back to the app (see src/main.ts, "Deep links").
+protocols:
+  - name: ArtSnack
+    schemes: [artsnack]
+    role: Viewer
+npmRebuild: false
+electronLanguages:
+  - en
+mac:
+  category: public.app-category.graphics-design
+  icon: resources/icon.png
+  darkModeSupport: true
+  hardenedRuntime: true
+  gatekeeperAssess: false
+  notarize: false
+  target:
+    - target: dmg
+      arch: [arm64]
+    - target: dir
+      arch: [arm64]
+  extendInfo:
+    NSHumanReadableCopyright: Vadym Kotai
+    # Lets the window drop into native full screen from the green button.
+    LSApplicationCategoryType: public.app-category.graphics-design
+dmg:
+  title: ArtSnack
+  contents:
+    - x: 140
+      y: 180
+    - x: 400
+      y: 180
+      type: link
+      path: /Applications
+
+linux:
+  executableName: artsnack
+  icon: resources/icon.png
+  category: Graphics
+  target: dir

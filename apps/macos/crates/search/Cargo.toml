@@ -1,0 +1,28 @@
+[package]
+name = "artsnack-search"
+description = "The Search screen: the whole history searched on the device."
+edition.workspace = true
+version.workspace = true
+publish.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+anyhow.workspace = true
+artsnack-backend.workspace = true
+artsnack-library.workspace = true
+artsnack-media.workspace = true
+artsnack-runtime.workspace = true
+artsnack-settings.workspace = true
+artsnack-ui.workspace = true
+gpui-kit.workspace = true
+# NFKC and Unicode letter/number classes, as the web's `normalize("NFKC")` and
+# `\p{L}\p{N}`. Already built for `url`'s IDNA support; not yet in the
+# workspace list.
+icu_normalizer.workspace = true
+icu_properties.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+tracing.workspace = true
+url.workspace = true

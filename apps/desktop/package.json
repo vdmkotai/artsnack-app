@@ -1,0 +1,21 @@
+{
+  "name": "@artsnack/desktop",
+  "version": "0.7.0",
+  "private": true,
+  "description": "ArtSnack for macOS",
+  "author": "Vadym Kotai",
+  "main": "dist/main.js",
+  "scripts": {
+    "compile": "bun build src/main.ts src/preload.ts --outdir dist --target node --format cjs --external electron",
+    "dev": "bun run compile && electron .",
+    "typecheck": "tsc --noEmit",
+    "pack": "bun run compile && bun scripts/package.ts --mac --dir",
+    "dist": "bun run compile && bun scripts/package.ts --mac",
+    "install:local": "bun run dist && bun scripts/install-local.ts",
+    "pack:linux": "bun run compile && bun scripts/package.ts --linux --dir"
+  },
+  "devDependencies": {
+    "electron": "^44.3.0",
+    "electron-builder": "^26.15.3"
+  }
+}

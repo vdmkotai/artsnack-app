@@ -1,0 +1,6 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "bunVersion": "1.x",
+  "installCommand": "bun install --frozen-lockfile --filter '@artsnack/web' --filter 'artsnack'",
+  "ignoreCommand": "base=\"${VERCEL_GIT_PREVIOUS_SHA:-}\"; git cat-file -e \"$base^{commit}\" 2>/dev/null || base=\"$(git rev-parse HEAD^ 2>/dev/null)\"; [ -n \"$base\" ] && git diff --quiet \"$base\" HEAD -- :/apps/web :/packages :/patches :/bun.lock :/package.json"
+}

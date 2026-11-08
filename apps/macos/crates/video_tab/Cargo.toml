@@ -1,0 +1,27 @@
+[package]
+name = "artsnack-video-tab"
+description = "The Generate screen's Self-hosted video tab: MiniMax H3 and LTX 2.3 on the video pods."
+edition.workspace = true
+version.workspace = true
+publish.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+anyhow.workspace = true
+artsnack-api-tab.workspace = true
+artsnack-backend.workspace = true
+artsnack-library.workspace = true
+artsnack-media.workspace = true
+artsnack-pods.workspace = true
+artsnack-prompts.workspace = true
+artsnack-rules.workspace = true
+artsnack-runtime.workspace = true
+artsnack-settings.workspace = true
+artsnack-ui.workspace = true
+futures.workspace = true
+gpui-kit.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+tracing.workspace = true

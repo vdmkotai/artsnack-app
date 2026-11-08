@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>ArtSnack</title>
+    <meta name="color-scheme" content="dark" />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #1b1a17;
+        --fg: #f4f3f0;
+        --muted: #a8a59c;
+        --border: #34322d;
+        --card: #24231f;
+        --accent-a: #f97316;
+        --accent-b: #ec4899;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+      body {
+        background: var(--bg);
+        color: var(--fg);
+        font:
+          15px/1.5 -apple-system,
+          BlinkMacSystemFont,
+          "Inter",
+          "Helvetica Neue",
+          sans-serif;
+        -webkit-font-smoothing: antialiased;
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+      }
+      .drag {
+        position: fixed;
+        inset: 0 0 auto 0;
+        height: 56px;
+        -webkit-app-region: drag;
+      }
+      main {
+        width: min(440px, calc(100vw - 48px));
+        text-align: center;
+        animation: rise 420ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+      }
+      @keyframes rise {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      .mark {
+        width: 72px;
+        height: 72px;
+        margin: 0 auto 28px;
+        border-radius: 18px;
+        background: #121110;
+        border: 1px solid var(--border);
+        display: grid;
+        place-items: center;
+        box-shadow:
+          0 20px 50px rgb(0 0 0 / 0.45),
+          inset 0 1px 0 rgb(255 255 255 / 0.05);
+      }
+      h1 {
+        font-size: 22px;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        margin: 0 0 8px;
+      }
+      p {
+        margin: 0;
+        color: var(--muted);
+      }
+      code {
+        font:
+          12px/1.6 ui-monospace,
+          "Geist Mono",
+          Menlo,
+          monospace;
+        color: var(--muted);
+        display: block;
+        margin-top: 18px;
+        padding: 10px 14px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        word-break: break-all;
+        text-align: left;
+      }
+      .actions {
+        margin-top: 28px;
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+      }
+      button {
+        appearance: none;
+        font: inherit;
+        font-weight: 500;
+        color: var(--fg);
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 9px 18px;
+        cursor: default;
+        transition:
+          background 120ms,
+          border-color 120ms,
+          transform 80ms;
+      }
+      button:hover {
+        background: #2c2a25;
+        border-color: #45423b;
+      }
+      button:active {
+        transform: scale(0.98);
+      }
+      button.primary {
+        color: #111;
+        border-color: transparent;
+        background: linear-gradient(135deg, var(--accent-a), var(--accent-b));
+      }
+      button.primary:hover {
+        filter: brightness(1.08);
+      }
+      .status {
+        margin-top: 18px;
+        font-size: 13px;
+        color: var(--muted);
+        min-height: 1.5em;
+      }
+      .pulse::before {
+        content: "";
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--accent-a);
+        margin-right: 8px;
+        vertical-align: 1px;
+        animation: pulse 1.2s ease-in-out infinite;
+      }
+      @keyframes pulse {
+        50% {
+          opacity: 0.25;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="drag"></div>
+    <main>
+      <div class="mark" aria-hidden="true">
+        <svg width="40" height="40" viewBox="0 0 32 32">
+          <defs>
+            <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#f97316" />
+              <stop offset="1" stop-color="#ec4899" />
+            </linearGradient>
+          </defs>
+          <path
+            d="M8 24 L12 8 L16 18 L20 10 L24 24"
+            stroke="url(#g)"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            fill="none"
+          />
+          <circle cx="24" cy="10" r="2.5" fill="url(#g)" />
+        </svg>
+      </div>
+      <h1>Can't reach ArtSnack</h1>
+      <p id="lede">The app couldn't load. Check your connection and try again.</p>
+      <code id="detail"></code>
+      <div class="actions">
+        <button class="primary" id="retry">Try Again</button>
+      </div>
+      <div class="status" id="status"></div>
+    </main>
+    <script>
+      const params = new URLSearchParams(location.search);
+      const setup = params.get("setup");
+      const url = params.get("url") || "";
+      const code = params.get("code") || "";
+      const description = params.get("description") || "";
+      const detail = document.getElementById("detail");
+      const status = document.getElementById("status");
+
+      // The shell has no web app to load: say what to set instead of retrying.
+      if (setup) {
+        document.querySelector("h1").textContent = "ArtSnack is not set up";
+        document.getElementById("lede").textContent = setup;
+        detail.textContent = "ARTSNACK_DESKTOP_URL=https://artsnack.example.com";
+        document.querySelector(".actions").remove();
+        status.remove();
+      } else {
+        if (url)
+          detail.textContent = `${description || "Load failed"}${code ? ` (${code})` : ""} — ${url}`;
+        else detail.remove();
+
+        function retry() {
+          status.className = "status pulse";
+          status.textContent = "Connecting…";
+          window.artsnackDesktop?.openApp();
+        }
+        document.getElementById("retry").addEventListener("click", retry);
+
+        // Quietly try again on our own once the OS says the network is back,
+        // and every 15s regardless, in case it was the server rather than us.
+        window.addEventListener("online", retry);
+        let ticks = 0;
+        setInterval(() => {
+          ticks += 1;
+          if (navigator.onLine) retry();
+          else status.textContent = `Offline · retrying when the network returns`;
+        }, 15000);
+      }
+    </script>
+  </body>
+</html>

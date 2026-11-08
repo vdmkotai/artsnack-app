@@ -1,0 +1,102 @@
+name: Vast ComfyUI image
+
+on:
+  pull_request:
+    paths:
+      - infra/vast-image/**
+      - .github/workflows/vast-image.yml
+  push:
+    branches: [main]
+    paths:
+      - infra/vast-image/**
+      - .github/workflows/vast-image.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  VAST_BASE_IMAGE: runpod/comfyui:1.4.1-cuda12.8@sha256:1f9de5f6c1183211b7fb43c626c48a11c5ff9bda6acde77781fa1f104aac3469
+  # Published under the repository owner's GHCR namespace. GHCR names must be
+  # lowercase: if the owner name has capitals, write it out in lowercase here.
+  VAST_TARGET_IMAGE: ghcr.io/${{ github.repository_owner }}/artsnack-comfyui-vast:1.4.1-cuda12.8-v2
+
+concurrency:
+  group: vast-comfyui-image
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3
+
+      - name: Validate the adapter and Docker build
+        run: |
+          set -euo pipefail
+          bash -n infra/vast-image/onstart.sh
+          test_workspace="$(mktemp -d)"
+          ARTSNACK_WORKSPACE_DIR="$test_workspace" \
+            ARTSNACK_STARTUP_SCRIPT_B64="$(printf '%s' \
+              'printf startup-ok > "$ARTSNACK_WORKSPACE_DIR/result"' | base64 -w0)" \
+            bash infra/vast-image/onstart.sh
+          for _ in 1 2 3 4 5; do
+            [[ -f "$test_workspace/result" ]] && break
+            sleep 0.1
+          done
+          [[ "$(<"$test_workspace/result")" == "startup-ok" ]]
+          [[ -x "$test_workspace/artsnack-bootstrap.sh" ]]
+          grep -Fqx \
+            "FROM --platform=\$ARTSNACK_TARGETPLATFORM $VAST_BASE_IMAGE" \
+            infra/vast-image/Dockerfile
+          docker buildx build --check infra/vast-image
+
+  publish:
+    needs: validate
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: imjasonh/setup-crane@31b88efe9de28ae0ffa220711af4b60be9435f6e # v0.4
+        with:
+          version: v0.21.9
+
+      # The CUDA base is larger than a GitHub runner's free disk. Crane streams
+      # its existing compressed layers between registries, then appends only
+      # our tiny onstart adapter layer without unpacking the base image.
+      - name: Publish the adapter image
+        run: |
+          set -euo pipefail
+          layer_root="$(mktemp -d)"
+          install -D -m 0755 infra/vast-image/onstart.sh \
+            "$layer_root/workspace/runpod-slim/onstart.sh"
+          tar --sort=name --mtime='UTC 1970-01-01' \
+            --owner=0 --group=0 --numeric-owner \
+            -C "$layer_root" -cf "$RUNNER_TEMP/artsnack-onstart.tar" \
+            workspace/runpod-slim/onstart.sh
+          crane append \
+            --base "$VAST_BASE_IMAGE" \
+            --new_layer "$RUNNER_TEMP/artsnack-onstart.tar" \
+            --new_tag "$VAST_TARGET_IMAGE"
+          crane tag "$VAST_TARGET_IMAGE" "sha-${GITHUB_SHA::7}"
+
+      # The Vast launch path deliberately carries no long-lived registry
+      # credential. This check makes a private-package regression fail the
+      # deployment workflow instead of surfacing as a paid stuck instance.
+      - name: Verify anonymous pulls work
+        run: |
+          set -euo pipefail
+          anonymous_docker_config="$(mktemp -d)"
+          DOCKER_CONFIG="$anonymous_docker_config" crane digest "$VAST_TARGET_IMAGE"

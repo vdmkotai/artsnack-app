@@ -1,0 +1,97 @@
+/* Actual tile dimensions matter, regardless of the selected zoom percentage. */
+.tile {
+  container: preview-tile / size;
+}
+
+.inlineActions {
+  display: contents;
+}
+
+.inlineActions:focus-within [data-preview-overlay] {
+  opacity: 1;
+}
+
+.compactActions {
+  display: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 20;
+}
+
+.menuTrigger {
+  display: grid;
+  place-items: center;
+  width: min(28px, 100cqw);
+  height: min(28px, 100cqh);
+  border: 1px solid rgb(255 255 255 / 20%);
+  border-radius: 6px;
+  color: white;
+  background: rgb(0 0 0 / 70%);
+}
+
+.menuTrigger:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: -2px;
+}
+
+/* The portal escapes the tile's overflow clipping. Reuse the original controls
+   and callbacks, but present them as full-size, labeled rows. */
+.actionMenu {
+  width: max-content;
+  max-width: calc(100vw - 24px);
+  gap: 4px;
+}
+
+.actionMenu [data-preview-overlay] {
+  position: static;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  opacity: 1;
+}
+
+.actionMenu button {
+  position: static;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  height: auto;
+  min-height: 36px;
+  padding: 8px;
+  opacity: 1;
+}
+
+.actionMenu button::after {
+  content: attr(aria-label);
+}
+
+@container preview-tile (width < 180px) or (height < 80px) {
+  .inlineActions {
+    display: none;
+  }
+
+  .compactActions {
+    display: block;
+  }
+}
+
+@media (hover: none) {
+  .inlineActions [data-preview-overlay] {
+    opacity: 1;
+  }
+}
+
+/* API badges sit beside tile roots, so measure the masonry cell itself. */
+.cell {
+  container: preview-cell / size;
+}
+
+@container preview-cell (width < 180px) or (height < 80px) {
+  .cell > [data-preview-overlay] {
+    display: none;
+  }
+}

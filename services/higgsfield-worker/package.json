@@ -1,0 +1,14 @@
+{
+  "name": "artsnack-higgsfield-worker",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Stateless HTTP wrapper around the Higgsfield CLI, driven by Convex.",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

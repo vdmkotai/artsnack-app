@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# A second push to the same branch makes the first run pointless.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          # Matches vercel.json's "bunVersion", so CI and the deploy build agree.
+          bun-version: 1.x
+
+      # apps/desktop depends on electron, whose postinstall downloads a ~100MB
+      # binary. Nothing here launches it, so skip the download.
+      - run: bun install --frozen-lockfile
+        env:
+          ELECTRON_SKIP_BINARY_DOWNLOAD: "1"
+
+      - name: Typecheck
+        run: bun run typecheck
+
+      - name: Test
+        run: bun test
+
+      - name: Format
+        run: bunx oxfmt --check
+
+      # No --max-warnings 0: the jsx-a11y keyboard backlog is knowingly parked as
+      # warnings (see .oxlintrc.json), so only errors gate here.
+      - name: Lint
+        run: bunx oxlint
+
+# Deliberately no build step and no deploy step: `next build` needs the Clerk and
+# Convex credentials, and Vercel already runs it on every push.

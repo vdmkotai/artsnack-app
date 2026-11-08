@@ -1,0 +1,17 @@
+[package]
+name = "artsnack-settings-screen"
+description = "The Settings screen: per-account feature flags, the local media cache, the account."
+edition.workspace = true
+version.workspace = true
+publish.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+artsnack-backend.workspace = true
+artsnack-media.workspace = true
+artsnack-session.workspace = true
+artsnack-settings.workspace = true
+gpui-kit.workspace = true
+tracing.workspace = true

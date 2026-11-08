@@ -1,0 +1,10 @@
+@media (min-width: 64rem) {
+  .split {
+    display: grid;
+    grid-template-columns:
+      clamp(360px, calc((100% - 12px) * var(--controls-ratio, 0.4)), calc(100% - 332px))
+      12px minmax(0, 1fr);
+    min-height: 0;
+    min-width: 0;
+  }
+}

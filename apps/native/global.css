@@ -1,0 +1,125 @@
+@import "tailwindcss";
+@import "uniwind";
+
+@import "heroui-native/styles";
+
+/* Path to heroui-native's compiled output, relative to this file. Tailwind scans
+   it for the class names the library's own components use; without this line
+   every HeroUI component renders unstyled. */
+@source '../../node_modules/heroui-native/lib';
+
+/**
+ * ArtSnack's palette, handed to HeroUI as its theme — see docs/adr/0003 and
+ * theme/colors.ts, which stays the source of truth for the screens that still
+ * style themselves in JS. The two must agree, so the hexes below are copied from
+ * there rather than re-picked.
+ *
+ * Light and dark carry identical values on purpose. The app is dark-only
+ * (`userInterfaceStyle: "dark"` in app.config.ts), and defining both means a device
+ * in light mode — or a moment before Uniwind reads the system setting — still
+ * gets the intended surfaces rather than a white flash.
+ */
+@layer theme {
+  :root {
+    @variant light {
+      --background: #000000;
+      --foreground: #ffffff;
+
+      --surface: #1c1c1e;
+      --surface-foreground: #ffffff;
+      --surface-secondary: #2c2c2e;
+      --surface-secondary-foreground: #ffffff;
+      --surface-tertiary: #3a3a3c;
+      --surface-tertiary-foreground: #ffffff;
+
+      --overlay: #1c1c1e;
+      --overlay-foreground: #ffffff;
+      --backdrop: rgba(0, 0, 0, 0.55);
+
+      --muted: rgba(255, 255, 255, 0.34);
+
+      --default: rgba(255, 255, 255, 0.11);
+      --default-foreground: rgba(255, 255, 255, 0.92);
+
+      /* The primary action is a white capsule with black text — never a colour. */
+      --accent: #ffffff;
+      --accent-foreground: #000000;
+
+      --field-background: rgba(255, 255, 255, 0.08);
+      --field-foreground: #ffffff;
+      --field-placeholder: rgba(255, 255, 255, 0.28);
+      --field-border: rgba(255, 255, 255, 0.1);
+
+      --success: #30d5c8;
+      --success-foreground: #00201d;
+      --warning: #ff9f0a;
+      --warning-foreground: #241500;
+      --danger: #ff453a;
+      --danger-foreground: #ffffff;
+
+      --segment: #2c2c2e;
+      --segment-foreground: #ffffff;
+
+      --border: rgba(255, 255, 255, 0.1);
+      --separator: rgba(255, 255, 255, 0.09);
+      --focus: #ffffff;
+      --link: #ffffff;
+
+      --radius: 0.6rem;
+
+      --surface-shadow: 0 0 0 0 transparent inset;
+      --overlay-shadow: 0 0 1px 0 rgba(255, 255, 255, 0.14) inset;
+      --field-shadow: 0 0 0 0 transparent inset;
+    }
+
+    @variant dark {
+      --background: #000000;
+      --foreground: #ffffff;
+
+      --surface: #1c1c1e;
+      --surface-foreground: #ffffff;
+      --surface-secondary: #2c2c2e;
+      --surface-secondary-foreground: #ffffff;
+      --surface-tertiary: #3a3a3c;
+      --surface-tertiary-foreground: #ffffff;
+
+      --overlay: #1c1c1e;
+      --overlay-foreground: #ffffff;
+      --backdrop: rgba(0, 0, 0, 0.55);
+
+      --muted: rgba(255, 255, 255, 0.34);
+
+      --default: rgba(255, 255, 255, 0.11);
+      --default-foreground: rgba(255, 255, 255, 0.92);
+
+      --accent: #ffffff;
+      --accent-foreground: #000000;
+
+      --field-background: rgba(255, 255, 255, 0.08);
+      --field-foreground: #ffffff;
+      --field-placeholder: rgba(255, 255, 255, 0.28);
+      --field-border: rgba(255, 255, 255, 0.1);
+
+      --success: #30d5c8;
+      --success-foreground: #00201d;
+      --warning: #ff9f0a;
+      --warning-foreground: #241500;
+      --danger: #ff453a;
+      --danger-foreground: #ffffff;
+
+      --segment: #2c2c2e;
+      --segment-foreground: #ffffff;
+
+      --border: rgba(255, 255, 255, 0.1);
+      --separator: rgba(255, 255, 255, 0.09);
+      --focus: #ffffff;
+      --link: #ffffff;
+
+      --radius: 0.6rem;
+
+      --surface-shadow: 0 0 0 0 transparent inset;
+      --overlay-shadow: 0 0 1px 0 rgba(255, 255, 255, 0.14) inset;
+      --field-shadow: 0 0 0 0 transparent inset;
+    }
+  }
+}

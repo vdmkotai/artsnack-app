@@ -1,0 +1,27 @@
+[package]
+name = "artsnack-api-tab"
+description = "The Generate screen's API tab: the hosted-provider composer (Grok, fal, Higgsfield, Atlas), its results, and the Image → Prompt tool."
+edition.workspace = true
+version.workspace = true
+publish.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+anyhow.workspace = true
+artsnack-backend.workspace = true
+artsnack-library.workspace = true
+artsnack-media.workspace = true
+artsnack-prompts.workspace = true
+artsnack-rules.workspace = true
+artsnack-runtime.workspace = true
+artsnack-settings.workspace = true
+artsnack-ui.workspace = true
+base64.workspace = true
+futures.workspace = true
+gpui-kit.workspace = true
+rand.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+tracing.workspace = true

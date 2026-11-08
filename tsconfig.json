@@ -1,0 +1,56 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "types": ["node"],
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    /* `@/lib/*` resolves in two places on purpose.
+     *
+     * Most of the old `lib/` moved to packages/shared, so Convex — and later the
+     * iOS app — can import it. Five browser-only helpers (utils, copy-text,
+     * download-media) and the server-only ones that talk to B2, the pod and the
+     * catalogue (b2, comfyui-url, backends/, upload-to-backend, catalog-cache,
+     * fetch-image) stayed with the web app, because nothing else can run them.
+     *
+     * Listing both leaves ~120 existing web imports untouched. TypeScript tries
+     * the entries in order and takes the first that exists, and its
+     * longest-prefix rule picks this key over the bare `@/*` below.
+     */
+    "paths": {
+      "@/lib/*": ["./apps/web/lib/*", "./packages/shared/*"],
+      "@/convex/*": ["./packages/backend/convex/*"],
+      "@/*": ["./apps/web/*"]
+    }
+  },
+  "include": [
+    "apps/web/next-env.d.ts",
+    "apps/**/*.ts",
+    "apps/**/*.tsx",
+    "packages/**/*.ts",
+    "scripts/**/*.ts",
+    "apps/web/.next/types/**/*.ts",
+    "apps/web/.next/dev/types/**/*.ts",
+    "**/*.mts"
+  ],
+  // apps/native has its own aliases (and no DOM), and apps/desktop is CommonJS
+  // for Electron. Each is typechecked by its own tsconfig; `bun run typecheck`
+  // runs all three.
+  "exclude": ["node_modules", "**/node_modules", "apps/native", "apps/desktop"]
+}

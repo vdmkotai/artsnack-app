@@ -1,0 +1,26 @@
+[package]
+name = "artsnack-generate"
+description = "The Generate screen: the self-hosted image, self-hosted video and API composers and their results."
+edition.workspace = true
+version.workspace = true
+publish.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+artsnack-api-tab.workspace = true
+artsnack-backend.workspace = true
+artsnack-library.workspace = true
+artsnack-media.workspace = true
+artsnack-pods.workspace = true
+artsnack-prompts.workspace = true
+artsnack-runtime.workspace = true
+artsnack-settings.workspace = true
+artsnack-ui.workspace = true
+artsnack-video-tab.workspace = true
+gpui-kit.workspace = true
+rand.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+tracing.workspace = true

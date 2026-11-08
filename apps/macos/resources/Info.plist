@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <!-- script/install.sh fills in the bundle id (ARTSNACK_BUNDLE_ID). -->
+  <key>CFBundleIdentifier</key>
+  <string>__BUNDLE_ID__</string>
+  <key>CFBundleName</key>
+  <string>ArtSnack Native</string>
+  <key>CFBundleDisplayName</key>
+  <string>ArtSnack Native</string>
+  <key>CFBundleExecutable</key>
+  <string>artsnack</string>
+  <key>CFBundleIconFile</key>
+  <string>AppIcon</string>
+  <key>CFBundlePackageType</key>
+  <string>APPL</string>
+  <key>CFBundleShortVersionString</key>
+  <string>__VERSION__</string>
+  <key>CFBundleVersion</key>
+  <string>__BUILD__</string>
+  <key>LSMinimumSystemVersion</key>
+  <string>13.0</string>
+  <key>LSApplicationCategoryType</key>
+  <string>public.app-category.graphics-design</string>
+  <key>NSHighResolutionCapable</key>
+  <true/>
+  <!--
+    The browser hands a finished sign-in back through this scheme
+    (packages/shared/desktop-bridge.ts, NATIVE_URL_SCHEME). Not `artsnack`:
+    that one belongs to the Electron shell, and both may be installed.
+  -->
+  <key>CFBundleURLTypes</key>
+  <array>
+    <dict>
+      <key>CFBundleURLName</key>
+      <string>__BUNDLE_ID__.sign-in</string>
+      <key>CFBundleURLSchemes</key>
+      <array>
+        <string>artsnack-native</string>
+      </array>
+    </dict>
+  </array>
+</dict>
+</plist>

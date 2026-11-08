@@ -1,0 +1,54 @@
+{
+  /* This TypeScript project config describes the environment that
+   * Convex functions run in and is used to typecheck them.
+   * You can modify it, but some settings are required to use Convex.
+   *
+   * It is not only read by `tsc`. Convex's bundler calls esbuild.build() with no
+   * `tsconfig` option (node_modules/convex/dist/esm/bundler/debugBundle.js), so
+   * esbuild auto-discovers the nearest tsconfig.json per input file and this one
+   * governs how convex/*.ts is compiled on `convex deploy`. Of everything below,
+   * esbuild reads only `paths` and derives `useDefineForClassFields` from
+   * `target`; the rest it ignores, and `jsx` it overrides with "automatic".
+   * Both of the two it does read are noted where they are set — changing either
+   * changes the deployed bundle, not just the typecheck.
+   */
+  "compilerOptions": {
+    /* These settings are not required by Convex and can be modified. */
+    "allowJs": true,
+    "strict": true,
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    /* Not in the CLI's template, but this project's "use node" actions reach for
+     * `process.env` and `Buffer`, which the Convex runtime provides too. */
+    "types": ["node"],
+    /* Here for tsc: no convex/*.ts uses `@/…`, but videoProcessor.ts pulls in
+     * ../../shared/video/workflow.ts, which does, and without this the typecheck
+     * fails. esbuild reads `paths` too, but resolves imports inside the shared
+     * package against the root tsconfig, so it never exercises these entries.
+     *
+     * Both keys mirror the root tsconfig, rebased on this file's directory:
+     * `../../shared` is packages/shared and `../../../apps/web/lib` is where the
+     * browser- and server-only helpers stayed. Convex code imports the shared
+     * package by relative path, never through an alias. */
+    "paths": {
+      "@/lib/*": ["../../../apps/web/lib/*", "../../shared/*"],
+      "@/*": ["../../../apps/web/*"]
+    },
+
+    /* These compiler options are required by Convex */
+    /* Also read by esbuild: ES2022-or-higher is what makes `useDefineForClassFields`
+     * default to true, so class fields in the bundle emit with define semantics.
+     * The root tsconfig's ES2022 already did that, so this is not a change — but
+     * lowering it here would quietly alter how deployed Convex classes compile. */
+    "target": "ESNext",
+    "lib": ["ES2023", "dom"],
+    "forceConsistentCasingInFileNames": true,
+    "module": "ESNext",
+    "isolatedModules": true,
+    "noEmit": true
+  },
+  "include": ["./**/*"],
+  "exclude": ["./_generated"]
+}

@@ -1,0 +1,16 @@
+[package]
+name = "artsnack-pods"
+description = "Self-hosted pod tools: the backend manager (renting, stopping and destroying RunPod and Vast.ai pods) and the launch confirmation."
+edition.workspace = true
+version.workspace = true
+publish.workspace = true
+
+[lints]
+workspace = true
+
+[dependencies]
+artsnack-backend.workspace = true
+artsnack-settings.workspace = true
+futures.workspace = true
+gpui-kit.workspace = true
+serde.workspace = true
